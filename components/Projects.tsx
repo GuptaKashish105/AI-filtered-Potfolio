@@ -1,84 +1,74 @@
-
 import React from 'react';
-import { ExternalLink, Github, Terminal } from 'lucide-react';
+import { ExternalLink, Github, Terminal, ArrowUpRight } from 'lucide-react';
 import { PROJECTS, PROJECT_LINKS } from '../constants';
 
 const Projects: React.FC = () => {
   return (
-    <section id="projects" className="py-20 bg-gray-950">
+    <section id="projects" className="py-32 bg-gray-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-20">
           <div>
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">Featured Projects</h2>
-            <div className="h-1 w-16 bg-blue-600 rounded-full"></div>
+            <h2 className="text-4xl md:text-6xl font-black text-white mb-6">Built to <span className="text-blue-500">Scale.</span></h2>
+            <div className="h-1.5 w-24 bg-gradient-to-r from-blue-600 to-transparent rounded-full mb-8"></div>
           </div>
-          <p className="text-gray-400 max-w-md text-sm">
-            High-performance solutions ranging from enterprise SaaS modules to intelligent AI interfaces.
+          <p className="text-gray-400 max-w-md text-lg leading-relaxed">
+            From enterprise-grade CRM modules to AI-powered experimental tools.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {PROJECTS.map((project, idx) => (
-            <div key={idx} className="group relative flex flex-col rounded-xl overflow-hidden bg-gray-900 border border-gray-800 transition-all hover:border-blue-500/40 shadow-lg">
-              <div className="aspect-[16/9] w-full overflow-hidden relative">
+            <div key={idx} className="group relative flex flex-col rounded-[2.5rem] overflow-hidden bg-gray-900/40 border border-gray-800/50 hover:border-blue-500/50 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/5 backdrop-blur-sm">
+              <div className="aspect-[4/3] w-full overflow-hidden relative">
                 <img 
                   src={project.image} 
                   alt={project.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-gray-950/80 to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/20 to-transparent opacity-90"></div>
+                
+                {/* Floating Label */}
+                <div className="absolute top-6 left-6 px-4 py-2 bg-black/50 backdrop-blur-md rounded-full border border-white/10">
+                  <span className="text-[10px] text-blue-400 font-black uppercase tracking-widest">{project.role}</span>
+                </div>
               </div>
               
-              <div className="p-5 flex flex-col flex-grow">
-                <div className="mb-2">
-                  <span className="text-[10px] text-blue-400 font-bold uppercase tracking-wider mb-1 block">
-                    {project.role}
-                  </span>
-                  <h3 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors line-clamp-1">
-                    {project.title}
-                  </h3>
-                </div>
+              <div className="p-8 flex flex-col flex-grow">
+                <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-blue-400 transition-colors leading-tight">
+                  {project.title}
+                </h3>
 
-                <p className="text-xs text-gray-400 mb-4 line-clamp-2 leading-relaxed">
+                <p className="text-gray-400 text-sm mb-8 line-clamp-3 leading-relaxed">
                   {project.about}
                 </p>
                 
-                <div className="space-y-1.5 mb-4">
-                  {project.highlights.slice(0, 2).map((highlight, i) => (
-                    <div key={i} className="flex items-start gap-2 text-[11px] text-gray-300">
-                      <Terminal className="w-3 h-3 text-gray-600 shrink-0 mt-0.5" />
-                      <span className="line-clamp-1">{highlight}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-auto">
-                  <div className="flex flex-wrap gap-1.5 mb-4">
-                    {project.techStack.slice(0, 3).map((tech, i) => (
-                      <span key={i} className="px-1.5 py-0.5 rounded bg-gray-800 text-gray-400 text-[9px] font-bold uppercase border border-gray-700">
+                <div className="mt-auto space-y-8">
+                  <div className="flex flex-wrap gap-2">
+                    {project.techStack.map((tech, i) => (
+                      <span key={i} className="px-3 py-1 rounded-xl bg-gray-950/50 text-gray-400 text-[10px] font-bold uppercase tracking-wider border border-gray-800 group-hover:border-blue-500/20 transition-all">
                         {tech}
                       </span>
                     ))}
                   </div>
 
-                  <div className="flex gap-2.5">
+                  <div className="flex gap-4">
                     <a 
                       href={PROJECT_LINKS[project.title]} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="flex-1 inline-flex items-center justify-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2 rounded-lg transition-all"
+                      className="flex-1 inline-flex items-center justify-center gap-2 bg-white text-gray-950 hover:bg-blue-600 hover:text-white font-black py-4 rounded-2xl transition-all shadow-xl active:scale-95 text-sm"
                     >
-                      <ExternalLink className="w-3 h-3" />
-                      View
+                      Explore Project
+                      <ArrowUpRight className="w-4 h-4" />
                     </a>
                     {PROJECT_LINKS[project.title]?.includes('github.com') && (
                       <a 
                         href={PROJECT_LINKS[project.title]} 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center w-8 h-8 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-all border border-gray-700"
+                        className="inline-flex items-center justify-center w-14 h-14 bg-gray-800/50 hover:bg-gray-700 text-white rounded-2xl transition-all border border-gray-700 active:scale-90"
                       >
-                        <Github className="w-3.5 h-3.5" />
+                        <Github className="w-6 h-6" />
                       </a>
                     )}
                   </div>

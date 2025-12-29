@@ -96,7 +96,7 @@ export const PROJECTS: Project[] = [
       "Link: https://kapdemo.kapturecrm.com/nui/"
     ],
     techStack: ["React", "TypeScript", "Micro frontends", "Tailwind"],
-    image: "https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&q=80&w=800"
+    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800"
   },
   {
     title: "AI Chatbot Plugin Interface",
@@ -122,7 +122,7 @@ export const PROJECTS: Project[] = [
       "Source: github.com/GuptaKashish105/fbclone"
     ],
     techStack: ["React", "Tailwind CSS", "JavaScript"],
-    image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=800"
+    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&q=80&w=800"
   },
   {
     title: "Smart ToDo App",
