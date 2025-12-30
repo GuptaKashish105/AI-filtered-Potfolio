@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Bot, X, Send, MessageSquare, Loader2, Minus, Maximize2, Sparkles, User, BrainCircuit, ExternalLink } from 'lucide-react';
+import { Bot, X, Send, MessageSquare, Loader2, Minus, Maximize2, Sparkles, User, BrainCircuit, ExternalLink, AlertCircle } from 'lucide-react';
 import { GoogleGenAI } from "@google/genai";
 import { PERSONAL_INFO, SKILL_GROUPS, EXPERIENCES, PROJECTS } from '../constants';
 
@@ -10,13 +10,10 @@ interface Message {
 }
 
 const FormattedMessage: React.FC<{ content: string }> = ({ content }) => {
-  // Simple markdown-style parser for bold, links, and lists
   const lines = content.split('\n');
-  
   return (
     <div className="space-y-2">
       {lines.map((line, i) => {
-        // Handle Bullet Points
         if (line.trim().startsWith('* ') || line.trim().startsWith('- ')) {
           const text = line.trim().substring(2);
           return (
@@ -26,22 +23,18 @@ const FormattedMessage: React.FC<{ content: string }> = ({ content }) => {
             </div>
           );
         }
-        
         return <p key={i} className="min-h-[1.25rem]">{renderInline(line)}</p>;
       })}
     </div>
   );
 };
 
-// Helper for bold and links
 function renderInline(text: string) {
   const parts = text.split(/(\*\*.*?\*\*|\[.*?\]\(.*?\))/g);
   return parts.map((part, i) => {
-    // Bold: **text**
     if (part.startsWith('**') && part.endsWith('**')) {
       return <strong key={i} className="font-black text-white">{part.slice(2, -2)}</strong>;
     }
-    // Link: [text](url)
     if (part.startsWith('[') && part.includes('](')) {
       const match = part.match(/\[(.*?)\]\((.*?)\)/);
       if (match) {
@@ -77,6 +70,8 @@ const AIAssistant: React.FC = () => {
   const [isThinking, setIsThinking] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const apiKey = process.env.API_KEY;
+
   const resumeContext = `
     User Profile: ${JSON.stringify(PERSONAL_INFO)}
     Skills: ${JSON.stringify(SKILL_GROUPS)}
@@ -107,6 +102,15 @@ const AIAssistant: React.FC = () => {
     const textToSend = customMessage || input;
     if (!textToSend.trim() || isLoading) return;
 
+    if (!apiKey) {
+      setMessages(prev => [...prev, 
+        { role: 'user', content: textToSend },
+        { role: 'assistant', content: "I'm sorry, my API Key hasn't been configured in the environment variables yet. Please contact Kashish to enable this feature!" }
+      ]);
+      setInput('');
+      return;
+    }
+
     const userMessage: Message = { role: 'user', content: textToSend };
     setMessages(prev => [...prev, userMessage]);
     setInput('');
@@ -114,7 +118,8 @@ const AIAssistant: React.FC = () => {
     setIsThinking(true);
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+      // Fix: Always use process.env.API_KEY directly during initialization to follow SDK guidelines
+      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
       const response = await ai.models.generateContent({
         model: "gemini-3-pro-preview",
         contents: [...messages.map(m => ({
@@ -130,14 +135,14 @@ const AIAssistant: React.FC = () => {
 
       const assistantMessage: Message = { 
         role: 'assistant', 
-        content: response.text || "I processed that request but couldn't generate a text response. How else can I assist?" 
+        content: response.text || "I processed that request but couldn't generate a text response." 
       };
       setMessages(prev => [...prev, assistantMessage]);
     } catch (error) {
       console.error("AI Error:", error);
       setMessages(prev => [...prev, { 
         role: 'assistant', 
-        content: "I encountered an error while thinking deeply about that. Please try again or reach out to Kashish directly!" 
+        content: "I encountered an error while thinking deeply about that. Please try again later!" 
       }]);
     } finally {
       setIsLoading(false);
@@ -194,6 +199,12 @@ const AIAssistant: React.FC = () => {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            {/* Fix: Lucide icons do not support a 'title' prop directly. Wrapping in a span to provide tooltip functionality. */}
+            {!apiKey && (
+              <span title="API Key Missing">
+                <AlertCircle className="w-4 h-4 text-amber-500 mr-2" />
+              </span>
+            )}
             <button onClick={() => setIsMinimized(!isMinimized)} className="p-2 text-gray-500 hover:text-white transition-colors">
               {isMinimized ? <Maximize2 className="w-4 h-4" /> : <Minus className="w-4 h-4" />}
             </button>
@@ -263,12 +274,13 @@ const AIAssistant: React.FC = () => {
                   type="text"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder="Ask a complex technical question..."
-                  className="w-full bg-gray-900 border border-gray-800 rounded-2xl px-5 py-4 text-sm text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all placeholder:text-gray-700 pr-14"
+                  placeholder={apiKey ? "Ask a complex technical question..." : "AI disabled: Key missing"}
+                  disabled={!apiKey}
+                  className="w-full bg-gray-900 border border-gray-800 rounded-2xl px-5 py-4 text-sm text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all placeholder:text-gray-700 pr-14 disabled:opacity-50"
                 />
                 <button 
                   type="submit"
-                  disabled={isLoading || !input.trim()}
+                  disabled={isLoading || !input.trim() || !apiKey}
                   className="absolute right-2 top-2 bottom-2 w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white disabled:opacity-50 disabled:bg-gray-800 transition-all"
                 >
                   <Send className="w-4 h-4" />

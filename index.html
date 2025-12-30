@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kashish Gupta | SDE II - Frontend Specialist</title>
+    <title>Kashish Gupta | Portfolio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,7 +21,6 @@
         }
         .mono { font-family: 'JetBrains Mono', monospace; }
 
-        /* Animated Grid Background */
         .bg-grid-pattern {
           background-image: 
             linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
@@ -34,7 +34,6 @@
           100% { background-position: 50px 50px; }
         }
 
-        /* Mouse Spotlight Effect */
         .spotlight {
           position: fixed;
           top: 0;
@@ -46,7 +45,6 @@
           background: radial-gradient(600px circle at var(--x, 50%) var(--y, 50%), var(--spotlight-color), transparent 40%);
         }
 
-        /* Text Shimmer Effect */
         .text-shimmer {
           background: linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6, #60a5fa);
           background-size: 200% auto;
@@ -59,7 +57,6 @@
           to { background-position: 200% center; }
         }
 
-        /* Floating Element Animation */
         .animate-float {
           animation: float 6s ease-in-out infinite;
         }
@@ -78,11 +75,13 @@
 <script type="importmap">
 {
   "imports": {
-    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+    "react": "https://esm.sh/react@^19.2.3",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
     "react/": "https://esm.sh/react@^19.2.3/",
-    "react": "https://esm.sh/react@^19.2.3",
-    "@google/genai": "https://esm.sh/@google/genai@^1.34.0"
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+    "@google/genai": "https://esm.sh/@google/genai@^1.34.0",
+    "vite": "https://esm.sh/vite@^7.3.0",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2"
   }
 }
 </script>
@@ -97,5 +96,6 @@
         spotlight.style.setProperty('--y', e.clientY + 'px');
       });
     </script>
+    <script type="module" src="/index.tsx"></script>
 </body>
 </html>
