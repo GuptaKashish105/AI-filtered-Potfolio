@@ -29,13 +29,16 @@ const Hero: React.FC = () => {
             </p>
 
             <div className="flex flex-wrap gap-5 mb-14">
-              <button 
-                onClick={() => scrollToSection('projects')}
+              <a
+                href="https://drive.google.com/file/d/16aIR5v2bGT_78j7jdvhGGTZz-xPIw0-o/view?usp=drive_link"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="group relative inline-flex items-center gap-3 bg-blue-600 text-white px-10 py-5 rounded-2xl font-bold transition-all hover:bg-blue-500 hover:scale-105 active:scale-95 shadow-2xl shadow-blue-500/25"
               >
-                View Portfolio
+                View Resume
                 <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-              </button>
+              </a>
+
               
               <div className="flex items-center gap-3">
                 <a href={PERSONAL_INFO.github} target="_blank" rel="noopener noreferrer" className="p-5 rounded-2xl bg-gray-900/50 border border-gray-800 text-gray-400 hover:text-white hover:border-gray-600 transition-all hover:bg-gray-800 active:scale-90">
