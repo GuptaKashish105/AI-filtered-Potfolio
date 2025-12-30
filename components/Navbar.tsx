@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Code2, Cpu, Terminal } from 'lucide-react';
+import { Menu, X, Terminal } from 'lucide-react';
+import { PERSONAL_INFO } from '../constants';
 import { scrollToSection } from '../utils/scroll';
 
 const Navbar: React.FC = () => {
@@ -30,7 +31,7 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className={`fixed top-6 left-0 right-0 z-50 transition-all duration-500 mx-auto max-w-7xl px-4`}>
-      <div className={`rounded-[2rem] border transition-all duration-500 ${scrolled ? 'bg-gray-950/60 backdrop-blur-xl border-gray-800/50 shadow-2xl py-3 px-8' : 'bg-transparent border-transparent py-5 px-4'}`}>
+      <div className={`rounded-[2rem] border transition-all duration-500 ${scrolled ? 'bg-gray-950/80 backdrop-blur-xl border-gray-800/50 shadow-2xl py-3 px-8' : 'bg-transparent border-transparent py-5 px-4'}`}>
         <div className="flex items-center justify-between">
           {/* Professional Brand Logo */}
           <div className="flex items-center gap-4 cursor-pointer group" onClick={(e) => handleLinkClick(e, 'about')}>
@@ -80,7 +81,7 @@ const Navbar: React.FC = () => {
 
       {/* Mobile Menu */}
       <div className={`md:hidden absolute top-28 left-4 right-4 transition-all duration-500 transform ${isOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0 pointer-events-none'}`}>
-        <div className="p-6 bg-gray-950/90 border border-gray-800 rounded-[2.5rem] shadow-2xl space-y-3 backdrop-blur-2xl">
+        <div className="p-6 bg-gray-950/95 border border-gray-800 rounded-[2.5rem] shadow-2xl space-y-3 backdrop-blur-2xl">
           {navLinks.map((link) => (
             <button
               key={link.name}

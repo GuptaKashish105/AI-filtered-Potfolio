@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Bot, X, Send, Loader2, Minus, Maximize2, Sparkles, User, BrainCircuit, ExternalLink, AlertCircle } from 'lucide-react';
+import { Bot, X, Send, Loader2, Minus, Maximize2, Sparkles, User, BrainCircuit, ExternalLink, AlertCircle, Clock } from 'lucide-react';
 import { GoogleGenAI } from "@google/genai";
 import { PERSONAL_INFO, SKILL_GROUPS, EXPERIENCES, PROJECTS } from '../constants';
 
@@ -61,7 +61,7 @@ const AIAssistant: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     { 
       role: 'assistant', 
-      content: `Hi! I'm Kashish's AI assistant. I'm powered by Gemini 3 Pro. I can analyze her architectural choices at KaptureCX or her technical projects in detail. What can I help you with today?` 
+      content: `Hi! I'm Kashish's AI assistant. I'm powered by Gemini Flash. I can analyze her architectural choices at KaptureCX or her technical projects in detail. What can I help you with today?` 
     }
   ]);
   const [input, setInput] = useState('');
@@ -117,8 +117,9 @@ const AIAssistant: React.FC = () => {
 
     try {
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      // Switched to gemini-3-flash-preview to resolve 429 Resource Exhausted errors on Pro model
       const response = await ai.models.generateContent({
-        model: "gemini-3-pro-preview",
+        model: "gemini-3-flash-preview",
         contents: [...messages.map(m => ({
           role: m.role === 'user' ? 'user' : 'model',
           parts: [{ text: m.content }]
@@ -126,7 +127,7 @@ const AIAssistant: React.FC = () => {
         config: {
           systemInstruction: resumeContext,
           temperature: 0.7,
-          thinkingConfig: { thinkingBudget: 16000 },
+          thinkingConfig: { thinkingBudget: 8000 },
         },
       });
 
@@ -135,11 +136,19 @@ const AIAssistant: React.FC = () => {
         content: response.text || "I processed that request but couldn't generate a text response." 
       };
       setMessages(prev => [...prev, assistantMessage]);
-    } catch (error) {
+    } catch (error: any) {
       console.error("AI Error:", error);
+      
+      let errorContent = "I encountered an error. Please check the console for details.";
+      
+      // Handle specific Quota/Rate Limit error
+      if (error?.message?.includes('429') || error?.status === 429) {
+        errorContent = "I'm receiving too many requests right now! Please wait a few seconds and try again. (API Rate Limit Exceeded)";
+      }
+
       setMessages(prev => [...prev, { 
         role: 'assistant', 
-        content: "I encountered an error. Please check the console for details." 
+        content: errorContent
       }]);
     } finally {
       setIsLoading(false);
@@ -157,9 +166,15 @@ const AIAssistant: React.FC = () => {
     return (
       <button 
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-8 right-8 z-50 p-5 bg-blue-600 text-white rounded-full shadow-2xl hover:bg-blue-500 transition-all"
+        className="fixed bottom-8 right-8 z-50 p-5 bg-blue-600 text-white rounded-full shadow-2xl hover:bg-blue-500 transition-all group"
       >
-        <Bot className="w-8 h-8" />
+        <div className="relative">
+          <Bot className="w-8 h-8" />
+          <span className="absolute -top-1 -right-1 flex h-3 w-3">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-3 w-3 bg-blue-100"></span>
+          </span>
+        </div>
       </button>
     );
   }
@@ -168,11 +183,14 @@ const AIAssistant: React.FC = () => {
     <div className={`fixed z-50 transition-all duration-500 ease-in-out ${
       isMinimized ? 'bottom-8 right-8 w-72' : 'bottom-8 right-8 w-full max-w-[450px] h-[600px] max-h-[85vh]'
     }`}>
-      <div className="w-full h-full bg-gray-950 border border-gray-800 rounded-[2.5rem] shadow-2xl flex flex-col overflow-hidden">
+      <div className="w-full h-full bg-gray-950 border border-gray-800 rounded-[2.5rem] shadow-2xl flex flex-col overflow-hidden backdrop-blur-3xl">
         <div className="p-6 bg-gray-900 border-b border-gray-800 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Bot className="w-5 h-5 text-blue-500" />
-            <h3 className="text-sm font-bold text-white">AI Assistant</h3>
+            <div>
+              <h3 className="text-sm font-bold text-white">AI Assistant</h3>
+              <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Gemini 3 Flash</p>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             {!apiKey && <AlertCircle className="w-4 h-4 text-amber-500" />}
@@ -192,7 +210,8 @@ const AIAssistant: React.FC = () => {
                 <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                   <div className={`max-w-[85%] p-4 rounded-2xl text-sm ${
                     msg.role === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-900 text-gray-300 border border-gray-800'
-                  }`}>
+                  } ${msg.content.includes('Rate Limit') ? 'border-amber-500/50 bg-amber-500/5 text-amber-200' : ''}`}>
+                    {msg.content.includes('Rate Limit') && <Clock className="w-4 h-4 mb-2 opacity-50" />}
                     <FormattedMessage content={msg.content} />
                   </div>
                 </div>
@@ -201,7 +220,7 @@ const AIAssistant: React.FC = () => {
                 <div className="flex justify-start">
                   <div className="p-4 bg-gray-900/50 text-purple-400 text-[10px] font-bold uppercase tracking-widest rounded-2xl flex items-center gap-2 border border-purple-500/20">
                     <Loader2 className="w-3 h-3 animate-spin" />
-                    Thinking...
+                    Analyzing...
                   </div>
                 </div>
               )}
@@ -213,7 +232,7 @@ const AIAssistant: React.FC = () => {
                 <button
                   key={i}
                   onClick={() => handleSend(action)}
-                  className="px-3 py-1.5 bg-gray-900 border border-gray-800 rounded-lg text-[10px] text-gray-400 whitespace-nowrap"
+                  className="px-3 py-1.5 bg-gray-900 border border-gray-800 rounded-lg text-[10px] text-gray-400 whitespace-nowrap hover:border-blue-500/50 hover:text-white transition-all"
                 >
                   {action}
                 </button>
@@ -230,14 +249,15 @@ const AIAssistant: React.FC = () => {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Ask something..."
-                  className="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500"
+                  disabled={isLoading}
+                  className="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 disabled:opacity-50"
                 />
                 <button 
                   type="submit"
                   disabled={isLoading || !input.trim()}
-                  className="absolute right-2 top-2 w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white disabled:opacity-50"
+                  className="absolute right-2 top-2 w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white disabled:opacity-50 transition-all hover:bg-blue-500"
                 >
-                  <Send className="w-4 h-4" />
+                  {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                 </button>
               </form>
             </div>

@@ -1,10 +1,13 @@
+
 import React from 'react';
-import { SKILL_GROUPS } from '../constants';
+import { User, Quote, Sparkles } from 'lucide-react';
+import { SKILL_GROUPS, PERSONAL_INFO } from '../constants';
 
 const Skills: React.FC = () => {
   return (
     <section id="skills" className="py-32 relative bg-gray-950/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Technical Arsenal Heading */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-20">
           <div>
             <h2 className="text-4xl md:text-6xl font-black text-white mb-6">Technical <br /> <span className="text-blue-500">Arsenal.</span></h2>
@@ -15,6 +18,7 @@ const Skills: React.FC = () => {
           </p>
         </div>
 
+        {/* Skills Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {SKILL_GROUPS.map((group, idx) => (
             <div 

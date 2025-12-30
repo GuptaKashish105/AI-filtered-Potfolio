@@ -13,6 +13,7 @@ import { SkillGroup, Experience, Project, Education, Certificate } from './types
 export const PERSONAL_INFO = {
   name: "Kashish Gupta",
   title: "Software Engineer - Frontend",
+  profileImage: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=1000",
   location: "Bangalore, India",
   phone: "8077863344",
   email: "kashishgupta142@gmail.com",
