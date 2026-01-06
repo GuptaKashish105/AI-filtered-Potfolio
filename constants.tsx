@@ -19,7 +19,7 @@ export const PERSONAL_INFO = {
   email: "kashishgupta142@gmail.com",
   linkedin: "https://www.linkedin.com/in/kashishgupta142/",
   github: "https://github.com/GuptaKashish105",
-  portfolio: "#",
+  portfolio: "https://bold.pro/my/kashish-gupta-250403000258",
   summary: "Frontend Software Developer with 3 years of experience building scalable SaaS products using React, TypeScript, and Micro-Frontend architecture. Recently contributed to AI-driven solutions, including developing AI-powered platforms and automation tools that enhance user experience and streamline workflows."
 };
 
@@ -86,6 +86,19 @@ export const EXPERIENCES: Experience[] = [
 ];
 
 export const PROJECTS: Project[] = [
+  {
+    title: "HireAI-Agent",
+    period: "Aug 2025",
+    role: "AI Engineering – React 19 + Gemini",
+    about: "An autonomous AI job application agent powered by Google Gemini. Optimized for the Indian market, it sources matching roles from LinkedIn, Naukri, and Indeed, localizes salaries to INR/LPA, and drafts hyper-tailored application materials.",
+    highlights: [
+      "Autonomous sourcing from LinkedIn, Naukri, and Indeed.",
+      "Smart localization of salaries to INR/LPA formats.",
+      "Drafts hyper-tailored cover letters and application materials."
+    ],
+    techStack: ["React 19", "TypeScript", "Gemini API", "Tailwind CSS"],
+    image: "https://images.unsplash.com/photo-1614741118887-7a4ee193a5fa?auto=format&fit=crop&q=80&w=800"
+  },
   {
     title: "KaptureCRM – Large Scale CRM SaaS Software",
     period: "July 2023 – present",
@@ -175,6 +188,7 @@ export const CERTIFICATES: Certificate[] = [
 ];
 
 export const PROJECT_LINKS: Record<string, string> = {
+  "HireAI-Agent": "https://aistudio.google.com/apps/drive/1efERimQd4CmiA_qJUhuOKqCXRy8B-ATN?showAssistant=true&resourceKey=&showPreview=true&fullscreenApplet=true",
   "KaptureCRM – Large Scale CRM SaaS Software": "https://kapdemo.kapturecrm.com/nui/",
   "Smart ToDo App": "https://github.com/GuptaKashish105/smart-todo-app",
   "AI Chatbot Plugin Interface": "https://github.com/GuptaKashish105/ai-chatbot-plugin-interface",
